@@ -1,8 +1,11 @@
 package com.azure.longrunning.test.servicebus;
 
 public class Constants {
+    public static final String TEST_NAME = "testname";
+
     public static final String SERVICEBUS_CONN_STR = "SERVICE_BUS_CONN_STR";
     public static final String SERVICEBUS_QUEUE_NAME = "SERVICE_BUS_QUEUE_NAME";
+    public static final String SERVICEBUS_SESSION_QUEUE_NAME = "SERVICE_BUS_SESSION_QUEUE_NAME";
     public static final String SERVICEBUS_TOPIC_NAME = "SERVICE_BUS_TOPIC_NAME";
     public static final String SERVICEBUS_SUBSCRIPTION_NAME = "SERVICE_BUS_SUBSCRIPTION_NAME";
     public static final String PREFETCH = "PREFETCH";

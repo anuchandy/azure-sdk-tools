@@ -1,6 +1,5 @@
 package com.azure.longrunning.test.servicebus;
 
-
 import com.microsoft.applicationinsights.TelemetryClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +12,10 @@ import java.time.Duration;
 @Service
 public abstract class LongRunningRunner {
     @Autowired
-    protected LongRunningOptions options;
+    protected CmdlineArgs cmdlineArgs;
+
+    @Autowired
+    protected EnvArgs envArgs;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -30,7 +32,7 @@ public abstract class LongRunningRunner {
     @Bean
     private RateMeter createRateMeter() {
         return new RateMeter(applicationContext.getBean(TelemetryClient.class), Duration.ofSeconds(
-                Integer.parseInt(options.get(Constants.METRIC_INTERVAL_SEC, "60")))
+                Integer.parseInt(cmdlineArgs.get(Constants.METRIC_INTERVAL_SEC, "60")))
         );
     }
 

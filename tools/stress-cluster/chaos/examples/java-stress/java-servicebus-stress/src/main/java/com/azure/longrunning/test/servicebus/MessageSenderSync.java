@@ -12,19 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONN_STR;
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_QUEUE_NAME;
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_TOPIC_NAME;
-
 @Service
 public class MessageSenderSync extends LongRunningRunner {
     private final ClientLogger LOGGER = new ClientLogger(MessageProcessor.class);
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONN_STR);
-        String queueName = options.get(SERVICEBUS_QUEUE_NAME);
-        String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
+        String connectionString = envArgs.get(Constants.SERVICEBUS_CONN_STR);
+        String queueName = envArgs.get(Constants.SERVICEBUS_QUEUE_NAME);
+        String topicName = queueName == null ? envArgs.get(Constants.SERVICEBUS_TOPIC_NAME, null) : null;
 
         ServiceBusSenderClient client = new ServiceBusClientBuilder()
                 .connectionString(connectionString)

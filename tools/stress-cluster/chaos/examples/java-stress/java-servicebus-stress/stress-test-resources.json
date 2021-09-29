@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.613.9944",
+      "templateHash": "12809615050058937329"
+    }
+  },
+  "parameters": {
+    "baseName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The base resource name."
+      }
+    },
+    "testApplicationOid": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "functions": [],
+  "variables": {
+    "apiVersion": "2017-04-01",
+    "location": "[resourceGroup().location]",
+    "serviceBusNamespaceName": "[format('sb-{0}-msging', parameters('baseName'))]",
+    "serviceBusAuthRuleName": "RootManageSharedAccessKey",
+    "serviceBusQueueName": "simple-queue",
+    "serviceBusSessionQueueName": "session-queue",
+    "serviceBusScopedAuthRuleName": "[format('{0}/{1}', variables('serviceBusNamespaceName'), variables('serviceBusAuthRuleName'))]",
+    "serviceBusScopedQueueName": "[format('{0}/{1}', variables('serviceBusNamespaceName'), variables('serviceBusQueueName'))]",
+    "serviceBusScopedSessionQueueName": "[format('{0}/{1}', variables('serviceBusNamespaceName'), variables('serviceBusSessionQueueName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2017-04-01",
+      "name": "[variables('serviceBusNamespaceName')]",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard"
+      },
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+      "apiVersion": "2017-04-01",
+      "name": "[variables('serviceBusScopedAuthRuleName')]",
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusNamespaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/queues",
+      "apiVersion": "2017-04-01",
+      "name": "[variables('serviceBusScopedQueueName')]",
+      "properties": {
+        "lockDuration": "PT5M",
+        "maxSizeInMegabytes": 5120,
+        "requiresDuplicateDetection": false,
+        "requiresSession": false,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "duplicateDetectionHistoryTimeWindow": "PT10M",
+        "maxDeliveryCount": 10,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "enablePartitioning": false,
+        "enableExpress": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusNamespaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/queues",
+      "apiVersion": "2017-04-01",
+      "name": "[variables('serviceBusScopedSessionQueueName')]",
+      "properties": {
+        "lockDuration": "PT5M",
+        "maxSizeInMegabytes": 5120,
+        "requiresDuplicateDetection": false,
+        "requiresSession": true,
+        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+        "deadLetteringOnMessageExpiration": false,
+        "duplicateDetectionHistoryTimeWindow": "PT10M",
+        "maxDeliveryCount": 10,
+        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+        "enablePartitioning": false,
+        "enableExpress": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusNamespaceName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "SERVICEBUS_ENDPOINT": {
+      "type": "string",
+      "value": "[replace(reference(resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusNamespaceName'))).serviceBusEndpoint, ':443/', '')]"
+    },
+    "SERVICE_BUS_CONN_STR": {
+      "type": "string",
+      "value": "[listkeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', split(variables('serviceBusScopedAuthRuleName'), '/')[0], split(variables('serviceBusScopedAuthRuleName'), '/')[1]), variables('apiVersion')).primaryConnectionString]"
+    },
+    "SERVICE_BUS_QUEUE_NAME": {
+      "type": "string",
+      "value": "[variables('serviceBusQueueName')]"
+    },
+    "SERVICE_BUS_SESSION_QUEUE_NAME": {
+      "type": "string",
+      "value": "[variables('serviceBusSessionQueueName')]"
+    }
+  }
+}

@@ -10,16 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.azure.longrunning.test.servicebus.Constants.*;
-
 @Service
 public class MessageSender extends LongRunningRunner {
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONN_STR);
-        String queueName = options.get(SERVICEBUS_QUEUE_NAME);
-        String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
+        String connectionString = envArgs.get(Constants.SERVICEBUS_CONN_STR);
+        String queueName = envArgs.get(Constants.SERVICEBUS_QUEUE_NAME);
+        String topicName = queueName == null ? envArgs.get(Constants.SERVICEBUS_TOPIC_NAME, null) : null;
 
         ServiceBusSenderAsyncClient client = new ServiceBusClientBuilder()
                 .connectionString(connectionString)

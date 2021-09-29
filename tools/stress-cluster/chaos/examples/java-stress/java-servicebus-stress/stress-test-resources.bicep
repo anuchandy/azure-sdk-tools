@@ -83,7 +83,9 @@ resource serviceBusSessionQueue 'Microsoft.ServiceBus/namespaces/queues@2017-04-
   ]
 }
 
-output AZURE_CLIENT_OID string = testApplicationOid
+// Don't output AZURE_CLIENT_OID, this will populated by default in the pod env.
+// output AZURE_CLIENT_OID string = testApplicationOid
+
 output SERVICEBUS_ENDPOINT string = replace(serviceBusNamespace.properties.serviceBusEndpoint, ':443/', '')
 output SERVICE_BUS_CONN_STR string = listkeys(serviceBusAuthRule.id, apiVersion).primaryConnectionString
 output SERVICE_BUS_QUEUE_NAME string = serviceBusQueueName

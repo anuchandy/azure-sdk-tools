@@ -9,18 +9,16 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
-import static com.azure.longrunning.test.servicebus.Constants.*;
-
 @Service
 public class MessageReceiver extends LongRunningRunner {
     private final ClientLogger LOGGER = new ClientLogger(MessageReceiver.class);
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONN_STR);
-        String queueName = options.get(SERVICEBUS_QUEUE_NAME);
-        String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
-        String subscriptionName = queueName == null ? options.get(SERVICEBUS_SUBSCRIPTION_NAME) : null;
+        String connectionString = envArgs.get(Constants.SERVICEBUS_CONN_STR);
+        String queueName = envArgs.get(Constants.SERVICEBUS_QUEUE_NAME);
+        String topicName = queueName == null ? envArgs.get(Constants.SERVICEBUS_TOPIC_NAME, null) : null;
+        String subscriptionName = queueName == null ? envArgs.get(Constants.SERVICEBUS_SUBSCRIPTION_NAME, null) : null;
         String metricKey = queueName != null? queueName : topicName + "/" + subscriptionName;
 
         ServiceBusReceiverAsyncClient client = new ServiceBusClientBuilder()

@@ -14,19 +14,18 @@ public class LongRunningApp implements ApplicationRunner {
     protected ApplicationContext applicationContext;
 
     @Autowired
-    protected LongRunningOptions longRunningOptions;
+    protected CmdlineArgs cmdlineArgs;
+
+    @Autowired
+    protected EnvArgs envArgs;
 
     public static void main(String[] args) {
-        System.out.println("arg.len == " + args.length);
-        for (String arg : args) {
-            System.out.println("Y -> " + arg);
-        }
         SpringApplication.run(LongRunningApp.class, args);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String testClass = longRunningOptions.get("testname");
+        final String testClass = cmdlineArgs.get(Constants.TEST_NAME);
         LongRunningRunner runner = (LongRunningRunner) applicationContext.getBean(Class.forName(testClass));
         runner.run();
     }

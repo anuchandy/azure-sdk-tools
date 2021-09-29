@@ -8,19 +8,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
-import static com.azure.longrunning.test.servicebus.Constants.*;
-
-
 @Service
 public class MessageProcessor extends LongRunningRunner {
     private final ClientLogger LOGGER = new ClientLogger(MessageProcessor.class);
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONN_STR);
-        String queueName = options.get(SERVICEBUS_QUEUE_NAME);
-        String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
-        String subscriptionName = queueName == null ? options.get(SERVICEBUS_SUBSCRIPTION_NAME) : null;
+        String connectionString = cmdlineArgs.get(Constants.SERVICEBUS_CONN_STR);
+        String queueName = cmdlineArgs.get(Constants.SERVICEBUS_QUEUE_NAME);
+        String topicName = queueName == null ? cmdlineArgs.get(Constants.SERVICEBUS_TOPIC_NAME, null) : null;
+        String subscriptionName = queueName == null ? cmdlineArgs.get(Constants.SERVICEBUS_SUBSCRIPTION_NAME, null) : null;
         var processorClientBuilder = new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .retryOptions(new AmqpRetryOptions()

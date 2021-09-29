@@ -13,21 +13,16 @@ import com.azure.messaging.servicebus.models.ServiceBusReceiveMode;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
 
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONN_STR;
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_QUEUE_NAME;
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_SUBSCRIPTION_NAME;
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_TOPIC_NAME;
-
 @Service
 public class MessageReceiverSync extends LongRunningRunner {
     private final ClientLogger LOGGER = new ClientLogger(MessageReceiverSync.class);
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONN_STR);
-        String queueName = options.get(SERVICEBUS_QUEUE_NAME);
-        String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
-        String subscriptionName = queueName == null ? options.get(SERVICEBUS_SUBSCRIPTION_NAME) : null;
+        String connectionString = envArgs.get(Constants.SERVICEBUS_CONN_STR);
+        String queueName = envArgs.get(Constants.SERVICEBUS_QUEUE_NAME);
+        String topicName = queueName == null ? envArgs.get(Constants.SERVICEBUS_TOPIC_NAME, null) : null;
+        String subscriptionName = queueName == null ? envArgs.get(Constants.SERVICEBUS_SUBSCRIPTION_NAME, null) : null;
         String metricKey = queueName != null? queueName : topicName + "/" + subscriptionName;
 
         ServiceBusReceiverClient client = new ServiceBusClientBuilder()
