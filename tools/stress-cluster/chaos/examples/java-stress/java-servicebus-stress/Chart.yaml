@@ -1,0 +1,13 @@
+apiVersion: v2
+name: java-servicebus-stress-test
+description: A chart for performing java servicebus stress test
+version: 0.1.2
+appVersion: v0.2
+annotations:
+  stressTest: 'true'  # enable auto-discovery of this test via `find-all-stress-packages.ps1`
+  namespace: 'anuchan'
+
+dependencies:
+- name: stress-test-addons
+  version: 0.1.7
+  repository: https://stresstestcharts.blob.core.windows.net/helm/

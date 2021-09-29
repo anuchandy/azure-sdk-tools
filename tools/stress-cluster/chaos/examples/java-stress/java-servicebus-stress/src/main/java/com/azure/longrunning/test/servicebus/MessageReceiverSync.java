@@ -13,7 +13,7 @@ import com.azure.messaging.servicebus.models.ServiceBusReceiveMode;
 import org.springframework.stereotype.Service;
 import java.time.Duration;
 
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONNECTION_STRING;
+import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONN_STR;
 import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_QUEUE_NAME;
 import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_SUBSCRIPTION_NAME;
 import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_TOPIC_NAME;
@@ -24,7 +24,7 @@ public class MessageReceiverSync extends LongRunningRunner {
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONNECTION_STRING);
+        String connectionString = options.get(SERVICEBUS_CONN_STR);
         String queueName = options.get(SERVICEBUS_QUEUE_NAME);
         String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
         String subscriptionName = queueName == null ? options.get(SERVICEBUS_SUBSCRIPTION_NAME) : null;

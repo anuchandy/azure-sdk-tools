@@ -17,7 +17,7 @@ public class MessageSender extends LongRunningRunner {
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONNECTION_STRING);
+        String connectionString = options.get(SERVICEBUS_CONN_STR);
         String queueName = options.get(SERVICEBUS_QUEUE_NAME);
         String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
 

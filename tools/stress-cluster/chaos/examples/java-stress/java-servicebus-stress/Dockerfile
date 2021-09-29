@@ -10,5 +10,4 @@ COPY --from=builder application/dependencies/ ./
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
-ENV TEST_CLASS=com.azure.longrunning.test.servicebus.MessageSenderSync
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+

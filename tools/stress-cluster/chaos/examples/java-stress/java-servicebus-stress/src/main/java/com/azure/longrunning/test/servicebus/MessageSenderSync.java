@@ -5,16 +5,14 @@ import com.azure.core.amqp.AmqpRetryOptions;
 import com.azure.core.util.logging.ClientLogger;
 import com.azure.messaging.servicebus.ServiceBusClientBuilder;
 import com.azure.messaging.servicebus.ServiceBusMessage;
-import com.azure.messaging.servicebus.ServiceBusSenderAsyncClient;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONNECTION_STRING;
+import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_CONN_STR;
 import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_QUEUE_NAME;
 import static com.azure.longrunning.test.servicebus.Constants.SERVICEBUS_TOPIC_NAME;
 
@@ -24,7 +22,7 @@ public class MessageSenderSync extends LongRunningRunner {
 
     @Override
     public void run() {
-        String connectionString = options.get(SERVICEBUS_CONNECTION_STRING);
+        String connectionString = options.get(SERVICEBUS_CONN_STR);
         String queueName = options.get(SERVICEBUS_QUEUE_NAME);
         String topicName = queueName == null ? options.get(SERVICEBUS_TOPIC_NAME) : null;
 

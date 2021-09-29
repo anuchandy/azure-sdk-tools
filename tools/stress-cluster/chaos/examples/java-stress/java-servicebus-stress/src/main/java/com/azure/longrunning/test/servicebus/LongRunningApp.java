@@ -17,12 +17,16 @@ public class LongRunningApp implements ApplicationRunner {
     protected LongRunningOptions longRunningOptions;
 
     public static void main(String[] args) {
+        System.out.println("arg.len == " + args.length);
+        for (String arg : args) {
+            System.out.println("Y -> " + arg);
+        }
         SpringApplication.run(LongRunningApp.class, args);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String testClass = longRunningOptions.get("TEST_CLASS");
+        String testClass = longRunningOptions.get("testname");
         LongRunningRunner runner = (LongRunningRunner) applicationContext.getBean(Class.forName(testClass));
         runner.run();
     }
