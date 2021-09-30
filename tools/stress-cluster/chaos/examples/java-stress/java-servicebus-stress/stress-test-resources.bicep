@@ -7,7 +7,7 @@ var apiVersion = '2017-04-01'
 var location = resourceGroup().location
 
 // The parent service bus resource name.
-var serviceBusNamespaceName = 'sb-${baseName}-msging'
+var serviceBusNamespaceName = 'sb-${baseName}'
 // The child resource names.
 var serviceBusAuthRuleName = 'RootManageSharedAccessKey'
 var serviceBusQueueName = 'simple-queue'
