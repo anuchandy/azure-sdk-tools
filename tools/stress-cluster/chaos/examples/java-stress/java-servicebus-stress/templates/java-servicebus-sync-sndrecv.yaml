@@ -1,0 +1,20 @@
+{{- include "stress-test-addons.deploy-job-template.from-pod" (list . "stress.java-servicebus-sync-sndrecv") -}}
+  {{- define "stress.java-servicebus-sync-sndrecv" -}}
+metadata:
+  labels:
+    testName: java-servicebus-sync-sndrecv
+    testInstance: "java-servicebus-sync-sndrecv-{{ .Release.Name }}-{{ .Release.Revision }}"
+    chaos: "false"
+spec:
+  containers:
+    - name: java-servicebus-sync-sendersync
+      image: {{ default "stresstestregistry.azurecr.io/anuchan" .Values.repository }}/java-servicebus-stress:{{ default "v1" .Values.tag }}
+      command: ["java"]
+      args: ["org.springframework.boot.loader.JarLauncher", "--classname=MessageSenderSync"]
+      {{- include "stress-test-addons.container-env" . | nindent 6 }}
+    - name: java-servicebus-receiversync
+      image: {{ default "stresstestregistry.azurecr.io/anuchan" $.Values.repository }}/java-servicebus-stress:{{ default "v1" $.Values.tag }}
+      command: ["java"]
+      args: ["org.springframework.boot.loader.JarLauncher", "--classname=MessageReceiverSync"]
+      {{- include "stress-test-addons.container-env" . | nindent 6 }}
+  {{- end -}}

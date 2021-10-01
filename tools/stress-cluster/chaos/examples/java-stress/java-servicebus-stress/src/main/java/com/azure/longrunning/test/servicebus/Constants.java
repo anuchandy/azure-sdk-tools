@@ -1,7 +1,7 @@
 package com.azure.longrunning.test.servicebus;
 
 public class Constants {
-    public static final String TEST_NAME = "testname";
+    public static final String CLASS_NAME = "classname";
 
     public static final String SERVICEBUS_CONN_STR = "SERVICE_BUS_CONN_STR";
     public static final String SERVICEBUS_QUEUE_NAME = "SERVICE_BUS_QUEUE_NAME";

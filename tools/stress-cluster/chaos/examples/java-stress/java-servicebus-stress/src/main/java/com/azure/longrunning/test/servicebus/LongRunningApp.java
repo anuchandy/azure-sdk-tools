@@ -25,11 +25,11 @@ public class LongRunningApp implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String testClass = cmdlineArgs.get(Constants.TEST_NAME);
-        if (testClass != null) {
-            testClass = "com.azure.longrunning.test.servicebus." + testClass;
+        String className = cmdlineArgs.get(Constants.CLASS_NAME);
+        if (className != null) {
+            className = "com.azure.longrunning.test.servicebus." + className;
         }
-        LongRunningRunner runner = (LongRunningRunner) applicationContext.getBean(Class.forName(testClass));
+        LongRunningRunner runner = (LongRunningRunner) applicationContext.getBean(Class.forName(className));
         runner.run();
     }
 }
