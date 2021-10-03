@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.4.613.9944",
-      "templateHash": "12693574559779983779"
+      "templateHash": "8085549350834380116"
     }
   },
   "parameters": {
@@ -14,6 +14,18 @@
       "defaultValue": "[resourceGroup().name]",
       "metadata": {
         "description": "The base resource name."
+      }
+    },
+    "fileShareUniquePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The unique prefix for the file share names."
+      }
+    },
+    "fileSharesCount": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of file share to create"
       }
     },
     "testApplicationOid": {
@@ -101,6 +113,58 @@
       "dependsOn": [
         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusNamespaceName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "fileshares",
+      "resourceGroup": "anuchan-javaprod-stress",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "fileShareUniquePrefix": {
+            "value": "[parameters('fileShareUniquePrefix')]"
+          },
+          "fileSharesCount": {
+            "value": "[parameters('fileSharesCount')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "1328267720246733479"
+            }
+          },
+          "parameters": {
+            "fileShareUniquePrefix": {
+              "type": "string"
+            },
+            "fileSharesCount": {
+              "type": "int"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "copy": {
+                "name": "storageFileShare",
+                "count": "[length(range(0, parameters('fileSharesCount')))]"
+              },
+              "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+              "apiVersion": "2021-04-01",
+              "name": "[format('podcontainerslogs/default/{0}{1}', parameters('fileShareUniquePrefix'), range(0, parameters('fileSharesCount'))[copyIndex()])]",
+              "properties": {}
+            }
+          ]
+        }
+      }
     }
   ],
   "outputs": {

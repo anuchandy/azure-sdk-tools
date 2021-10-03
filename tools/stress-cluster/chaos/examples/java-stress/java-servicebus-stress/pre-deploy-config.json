@@ -1,0 +1,8 @@
+{
+  "entries" : [
+    {
+      "dirName": "sync-sndrecv",
+      "jobYamlFileName": "sync-sndrecv.yaml"
+    }
+  ]
+}

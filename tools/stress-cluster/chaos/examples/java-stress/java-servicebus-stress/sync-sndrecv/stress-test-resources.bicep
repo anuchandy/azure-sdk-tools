@@ -1,6 +1,11 @@
 @description('The base resource name.')
 param baseName string = resourceGroup().name
 
+@description('The unique prefix for the file share names.')
+param fileShareUniquePrefix string
+@description('The number of file share to create')
+param fileSharesCount int
+
 param testApplicationOid string = ''
 
 var apiVersion = '2017-04-01'
@@ -82,6 +87,16 @@ resource serviceBusSessionQueue 'Microsoft.ServiceBus/namespaces/queues@2017-04-
     serviceBusNamespace
   ]
 }
+
+module fileshares './create-fileshares.bicep' = {
+  name: 'fileshares'
+  params: {
+    fileShareUniquePrefix: fileShareUniquePrefix
+    fileSharesCount: fileSharesCount
+  }
+  scope: resourceGroup('anuchan-javaprod-stress')
+}
+
 
 // Don't output AZURE_CLIENT_OID, this will populated by default in the pod env.
 // output AZURE_CLIENT_OID string = testApplicationOid

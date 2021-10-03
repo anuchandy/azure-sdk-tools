@@ -1,6 +1,6 @@
 apiVersion: v2
-name: java-servicebus-stress-test
-description: A chart for performing java servicebus stress test
+name: java-sb-stress-sync-sndrecv
+description: A chart for performing java servicebus sync send receive stress test
 version: 0.1.2
 appVersion: v0.2
 annotations:

@@ -1,0 +1,37 @@
+{{- include "stress-test-addons.deploy-job-template.from-pod" (list . "stress.sync-sndrecv") -}}
+  {{- define "stress.sync-sndrecv" -}}
+metadata:
+  labels:
+    testName: sync-sndrecv
+    testInstance: "sync-sndrecv-{{ .Release.Name }}-{{ .Release.Revision }}"
+    chaos: "false"
+spec:
+  containers:
+    - name: sendersync
+      image: {{ default "stresstestregistry.azurecr.io/anuchan" .Values.repository }}/java-servicebus-stress:{{ default "v1" .Values.tag }}
+      command: ["java"]
+      args: ["org.springframework.boot.loader.JarLauncher", "--classname=MessageSenderSync"]
+      volumeMounts:
+        - name: azurefileshare1
+          mountPath: logs
+      {{- include "stress-test-addons.container-env" . | nindent 6 }}
+    - name: receiversync
+      image: {{ default "stresstestregistry.azurecr.io/anuchan" $.Values.repository }}/java-servicebus-stress:{{ default "v1" $.Values.tag }}
+      command: ["java"]
+      args: ["org.springframework.boot.loader.JarLauncher", "--classname=MessageReceiverSync"]
+      volumeMounts:
+        - name: azurefileshare2
+          mountPath: logs
+      {{- include "stress-test-addons.container-env" . | nindent 6 }}
+  volumes:
+    - name: azurefileshare1
+      azureFile:
+        secretName: java-pod-containers-logs-secret
+        shareName: sync-sndrecv-<random>-<i>
+        readOnly: false
+    - name: azurefileshare2
+      azureFile:
+        secretName: java-pod-containers-logs-secret
+        shareName: sync-sndrecv-<random>-<i>
+        readOnly: false
+  {{- end -}}
